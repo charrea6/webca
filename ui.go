@@ -53,7 +53,7 @@ var templates *template.Template
 // defaultHandler points to the handler for '/' requests
 var defaultHandler func(w http.ResponseWriter, r *http.Request)
 
-// PageStatus contains all values that a page and its templates need 
+// PageStatus contains all values that a page and its templates need
 // (including the SetupWizard when the setup is running)
 //	U      User
 // SetupWizard contains the status of the setup wizard and may be included in the PageStatus Map
@@ -75,7 +75,7 @@ func init() {
 	template.Must(templates.ParseFiles("style.css"))
 }
 
-// LoadCrt loads variables "Prfx" and "Crt" into PageSetup to point to the right 
+// LoadCrt loads variables "Prfx" and "Crt" into PageSetup to point to the right
 // CertSetup and its prefix and sets a default duration for that cert
 func (ps PageStatus) LoadCrt(arg interface{}, prfx string, defaultDuration int) string {
 	var cs *CertSetup
@@ -121,7 +121,7 @@ func qEsc(s string, args ...interface{}) string {
 	return url.QueryEscape(fmt.Sprintf(s, args...))
 }
 
-// WebCA starts the prepares and serves the WebApp 
+// WebCA starts the prepares and serves the WebApp
 func WebCA() {
 	smux := http.DefaultServeMux
 	addr := PrepareServer(smux)
@@ -167,7 +167,7 @@ func fixAddress(a address) address {
 	return a
 }
 
-// prepareServer prepares the Web handlers for the setup wizard if there is no HTTPS config or 
+// prepareServer prepares the Web handlers for the setup wizard if there is no HTTPS config or
 // the normal app if the app is already configured
 func PrepareServer(smux *http.ServeMux) address {
 	// load config...
@@ -206,7 +206,7 @@ func authCertServer(prefix string, dir http.Dir) http.Handler {
 func certServer(dir http.Dir) http.Handler {
 	h := http.FileServer(dir)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if strings.HasSuffix(r.URL.Path, ".key.pem") || !strings.HasSuffix(r.URL.Path, ".pem") {
+		if !strings.HasSuffix(r.URL.Path, ".key.pem") && !strings.HasSuffix(r.URL.Path, ".pem") {
 			http.NotFound(w, r)
 			return
 		}
@@ -259,7 +259,7 @@ func readMailer(r *http.Request) Mailer {
 	return m
 }
 
-// index displays the index page 
+// index displays the index page
 func index(w http.ResponseWriter, r *http.Request) {
 	ps := newLoggedPage(w, r)
 	if ps == nil {

@@ -77,6 +77,7 @@ WebCA Setup:
        alt="Licencia Creative Commons" style="border-width:0" src="/img/ccby.png" />
     </a><br /><a rel="license" href="http://creativecommons.org/licenses/by/3.0/">
     Creative Commons Attribution 3.0 License</a>.
+    <div>Icons made by <a href="https://www.freepik.com/?__hstc=57440181.eb47fcd240644e16c7809b3861793c2e.1558013566347.1558013566347.1558019646753.2&__hssc=57440181.1.1558019646753&__hsfp=3787192423" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" 			    title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" 			    title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 </div>
 </body>
 </html>
@@ -524,6 +525,13 @@ function checkPassword(el) {
 <tr>
 <td><a href="/cert/{{.CommonName}}.pem" title='{{tr "Download"}}'>
 <img width="64px" src="/img/download.png"/></a></td>
+{{end}}
+{{if .Cert.Childs}}
+{{else}}
+<td><a href="/cert/{{.CommonName}}.key.pem" title='{{tr "Download Key"}}'>
+<img width="64px" src="/img/key.png"/></a></td>
+{{end}}
+{{with .Cert.Crt.Subject}}
 <td><a href="/renew?cert={{.CommonName}}" title='{{tr "Renew"}}'>
 <img width="64px" src="/img/renew.png"/></a></td>
 <td><a href="/clone?cert={{.CommonName}}" title='{{tr "Clone"}}'>

@@ -2,10 +2,9 @@
 package main
 
 import (
-	"github.com/josvazg/webca"
+	"github.com/charrea6/webca"
 )
 
 func main() {
 	webca.WebCA()
 }
-
