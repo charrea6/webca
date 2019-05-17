@@ -125,6 +125,7 @@ func qEsc(s string, args ...interface{}) string {
 func WebCA() {
 	smux := http.DefaultServeMux
 	addr := PrepareServer(smux)
+	ReapSessions()
 	err := addr.listenAndServe(smux)
 	if portFix == 0 { // port Fixing is only applied once
 		if err != nil {
@@ -179,6 +180,7 @@ func PrepareServer(smux *http.ServeMux) address {
 	log.Printf("Starting WebCA normal startup...")
 	smux.Handle("/", accessControl(index))
 	smux.HandleFunc("/login", login)
+	smux.HandleFunc("/logout", logout)
 	smux.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
 	smux.Handle("/favicon.ico", http.FileServer(http.Dir("img")))
 	smux.Handle("/cert", accessControl(cert))
@@ -261,6 +263,10 @@ func readMailer(r *http.Request) Mailer {
 
 // index displays the index page
 func index(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.Error(w, "Sorry no idea what you are talking about...", http.StatusNotFound)
+		return
+	}
 	ps := newLoggedPage(w, r)
 	if ps == nil {
 		return
@@ -499,6 +505,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Redirect(w, r, targetUrl, 302)
 	}
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	RemoveSession(w, r)
+	http.Redirect(w, r, "/", 302)
 }
 
 // newPageStatus generates a new PageStatus including the Request
